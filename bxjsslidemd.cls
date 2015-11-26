@@ -36,10 +36,11 @@
 %%   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %%   Right brace   \}     Tilde         \~}
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bxjsslide}
-  [2015/10/18 v1.0c BXJS document classes]
+\ProvidesClass{bxjsslidemd}
+  [2015/11/26 by Mahito Sugiyama]
 \RequirePackage{calc}
 \RequirePackage{keyval}
+\RequirePackage{color}
 \let\jsEngine=n
 \def\bxjs@test@engine#1#2{%
   \edef\bxjs@tmpa{\string#1}%
@@ -672,14 +673,14 @@
 \newcommand{\Huge}{\bxjs@setfontsize\Huge\@xxvpt{33}}
 \newcommand{\HUGE}{\bxjs@setfontsize\HUGE{30}{40}}
 \everydisplay=\expandafter{\the\everydisplay \narrowbaselines}
-\newcommand{\headfont}{\sffamily}
+\newcommand{\headfont}{\sffamily\bfseries}
 \setlength\columnsep{2\Cwd}
 \setlength\columnseprule{0\p@}
 \setlength\lineskip{1\p@?}
 \setlength\normallineskip{1\p@?}
 \setlength\lineskiplimit{1\p@?}
 \setlength\normallineskiplimit{1\p@?}
-\renewcommand{\baselinestretch}{}
+\renewcommand{\baselinestretch}{1}
 \setlength\parskip{0\p@}
 \if@slide
   \setlength\parindent{0\p@}
@@ -871,18 +872,19 @@
       \let\footnote\thanks
       \null\vfil
       \if@slide
-        {\footnotesize \@date}%
-        \begin{center}
+        \vskip-3pt\raisebox{0pt}[0pt][30pt]{\parbox[t]{\linewidth}{\renewcommand{\baselinestretch}{1}\normalsize \@date}}\\%
+        \vskip-40pt\hfill\includegraphics[height=35pt]{logo.pdf}
+        \begin{flushleft}
           \mbox{} \\[1\jsZw]
-          \large
-          {\maybeblue\hrule height0\p@? depth2\p@?\relax}\par
+          \huge
+          {\headfont\@title}
           \smallskip
-          \@title
-          \smallskip
-          {\maybeblue\hrule height0\p@? depth2\p@?\relax}\par
+          {\vskip 5pt\color{green}\hrule height0\p@? depth.5\p@?\relax}\par
           \vfill
-          {\small \@author}%
-        \end{center}
+        \end{flushleft}
+        \begin{flushright}
+          {\large \@author}%
+        \end{flushright}
       \else
       \vskip 60\p@?
       \begin{center}%
@@ -1047,19 +1049,19 @@
     \@afterheading
   \fi
   \if@slide
-    {\vskip-6\p@?\maybeblue\hrule height0\p@? depth1\p@?\vskip7\p@?\relax}%
+    {\vskip-4\p@?\color{green}\hrule height0\p@? depth.5\p@?\vskip10\p@?\relax}
   \fi
   \par  % 2000-12-18
   \ignorespaces}
 \def\@ssect#1#2#3#4#5{%
-  \@tempskipa #3\relax
+  \@tempskipa #3\rule[-4pt]{0pt}{18pt}\relax
   \ifdim \@tempskipa<\z@
-    \def\@svsechd{#4{\hskip #1\relax #5}}%
+    \def\@svsechd{#4{\hskip #1\relax #5\rule[-4pt]{0pt}{10pt}}}%
   \else
     \begingroup
       #4{%
         \@hangfrom{\hskip #1}%
-          \interlinepenalty \@M #5\@@par}%
+          \interlinepenalty \@M #5\rule[-4pt]{0pt}{10pt}\@@par}%
     \endgroup
   \fi
   \@xsect{#3}}
@@ -1119,12 +1121,12 @@
   \vskip 3ex
   \@afterheading}
 \if@twocolumn
-  \newcommand{\section}{%
+  \newcommand{\sectionpre}{%
     \@startsection{section}{1}{\z@}%
     {0.6\Cvs}{0.4\Cvs}%
     {\normalfont\large\headfont\raggedright}}
 \else
-  \newcommand{\section}{%
+\newcommand{\sectionpre}{%
     \if@slide\clearpage\fi
     \@startsection{section}{1}{\z@}%
     {\Cvs \@plus.5\Cdp \@minus.2\Cdp}% 前アキ
@@ -1760,6 +1762,101 @@
 \input{bxjsja-\bxjs@jadriver.def}
 \fi
 \bxjs@restore@jltrcc
+%%
+% top space
+\setlength{\voffset}{6pt}
+\addtolength{\textheight}{-5pt}
+% font
+%\setjamainfont[RawFeature=-palt,BoldFont=KozGoPro-Medium]{Kozuka Gothic Pro}
+%\setjasansfont[RawFeature=-palt,BoldFont=KozGoPro-Medium]{Kozuka Gothic Pro}
+%\setjamonofont[RawFeature=-palt,BoldFont=KozGoPro-Medium]{Kozuka Gothic Pro}
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase,Scale=1.05}
+\setmainfont[Mapping=tex-text,BoldFont={Myriad Pro Semibold},BoldItalicFont={Myriad Pro Semibold Italic}]{Myriad Pro}
+\setsansfont[Mapping=tex-text,BoldFont={Myriad Pro Semibold},BoldItalicFont={Myriad Pro Semibold Italic}]{Myriad Pro}
+\setmonofont{Courier}
+% section without page number increment
+\newcommand{\section}[1]{\sectionpre*{#1}\addcontentsline{toc}{section}{#1}}
+\newcommand{\sectionn}[1]{\sectionpre*{#1}\setcounter{page}{\thepage - 1}}
+% color
+\definecolor{pink}{rgb}{0.886, 0.435, 0.667}
+\definecolor{green}{rgb}{0, 0.49, 0.478}
+\definecolor{blue}{rgb}{0.18, 0.2, 0.529}
+\definecolor{brown}{rgb}{0.4, 0.208, 0.192}
+\definecolor{gray1}{rgb}{0.125, 0.125, 0.125}
+\definecolor{gray2}{rgb}{0.157, 0.157, 0.157}
+% emphasizes
+\newcommand{\emr}[1]{\textcolor{pink}{#1}}
+\newcommand{\emb}[1]{\textcolor{blue}{#1}}
+\newcommand{\emg}[1]{\textcolor{green}{#1}}
+\newcommand{\embr}[1]{\textcolor{brown}{#1}}
+% display "current page / total page"
+\RequirePackage{lastpage}
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+\rhead{}
+\chead{}
+\lhead{}
+\cfoot{}
+\rfoot{\small\vskip -10pt \thepage/\pageref{LastPage}}
+\lfoot{}
+\renewcommand{\headrulewidth}{0pt}
+% settings for itemize and enumerate
+\def\itemize{%
+  \ifnum \@enumdepth > 0 \@itemdepth = \@enumdepth \fi
+  \ifnum \@itemdepth >\thr@@\@toodeep\else
+    \advance\@itemdepth\@ne
+    \edef\@itemitem{labelitem\romannumeral\the\@itemdepth}%
+    \expandafter
+    \list
+      \csname\@itemitem\endcsname
+          {\def\makelabel##1{\hss\llap{##1}}
+            \ifnum \@itemdepth > 0%
+            \setlength{\topsep}{10pt}%
+            \setlength{\itemsep}{10pt}%
+            \fi%
+            \ifnum \@itemdepth > 1%
+            \setlength{\topsep}{3pt}%
+            \setlength{\itemsep}{1pt}%
+            \setlength{\leftmargin}{15pt}%
+            \small%
+            \fi%
+            \setlength{\labelwidth}{20pt}%
+            \setlength{\abovedisplayskip}{3pt}%
+            \setlength{\belowdisplayskip}{3pt}%
+            \setlength{\mathindent}{0pt}% math indent for fleqn
+          }%
+          \fi}
+\renewcommand{\labelitemi}{\textcolor{green}{\textbullet}}
+\renewcommand{\labelitemii}{\textcolor{brown}{\bfseries --}}
+\renewcommand{\labelitemiii}{\textcolor{gray2}{$\circ$}}
+\def\enumerate{%
+  \ifnum \@itemdepth > 0 \@enumdepth = \@itemdepth \fi
+  \ifnum \@enumdepth >\thr@@\@toodeep\else
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+      \expandafter
+      \list
+        \csname label\@enumctr\endcsname
+                {\usecounter\@enumctr\def\makelabel##1{\hss\llap{##1}}
+                  \ifnum \@enumdepth > 0%
+                  \setlength{\topsep}{10pt}%
+                  \setlength{\itemsep}{10pt}%
+                  \fi%
+                  \ifnum \@enumdepth > 1%
+                  \setlength{\topsep}{3pt}%
+                  \setlength{\itemsep}{1pt}%
+                  \setlength{\leftmargin}{15pt}%
+                  \small%
+                  \fi%
+                  \setlength{\labelwidth}{20pt}%
+                  \setlength{\abovedisplayskip}{3pt}%
+                  \setlength{\belowdisplayskip}{3pt}%
+                  \setlength{\mathindent}{0pt}% math indent for fleqn
+                }%
+                \fi}
+\renewcommand{\labelenumi}{\textcolor{green}{\arabic{enumi}.}}
+\renewcommand{\labelenumii}{\textcolor{brown}{(\roman{enumii})}}
+\renewcommand{\labelenumiii}{\textcolor{gray2}{\alph{enumiii}.}}
 \endinput
 %%
-%% End of file `bxjsslide.cls'.
+%% End of file `bxjsslidemd.cls'.
