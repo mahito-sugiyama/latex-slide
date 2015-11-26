@@ -8,3 +8,8 @@ A simple LaTeX class file for slides based on the [BXjscls package](https://gith
 
 ## Usage
 See the file "template.tex".
+
+## Contact
+Author: Mahito Sugiyama  
+Affiliation: ISIR, Osaka University, Japan  
+E-mail: mahito@ar.sanken.osaka-u.ac.jp
