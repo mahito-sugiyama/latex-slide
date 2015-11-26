@@ -1,0 +1,89 @@
+\documentclass[xelatex,ja=standard,jafont=hiragino-pron,fleqn,no-math,base=35pt,paper={1189truemm}{841truemm},twocolumn]{bxjsslidemd}
+% A0, vertical, two column
+% change "xelatex" to "lualatex" if you use lualatex
+\usepackage[onlymath]{MyriadPro} % FontPro is needed
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{braket}
+\usepackage{accents}
+\makeatletter\def\widebar{\accentset{{\cc@style\underline{\mskip10mu}}}}\makeatother
+\renewcommand{\epsilon}{\varepsilon}
+% for PDF information
+\usepackage[unicode,pdftitle={},pdfsubject={},pdfauthor={},pdfkeywords={},pdfborder={0 0 0}]{hyperref}
+
+% for poster style
+\pagestyle{empty}
+\newcommand{\varhrulefill}[1][1.7pt]{\leavevmode\leaders\hrule height#1\hfill\kern0pt}
+\renewcommand{\section}[1]%
+{\vspace*{14pt}\noindent\begingroup\color{green}{\Large\bfseries #1}\hspace*{-2.2pt}\varhrulefill\endgroup\vspace*{5pt}}
+\usepackage{ulem}
+\newcommand{\postertitle}[5]{%
+\twocolumn[%
+\centering%
+{\bfseries\Huge #1}\vspace*{3pt}\\%
+{\LARGE #2}\vspace*{10pt}\\%
+{\Large #3}\ %
+{\large #4}\vspace*{5pt}\\%
+#5\\%
+\vspace*{15pt}%
+]%
+\vspace*{-45pt}\hspace*{487pt}\includegraphics[height=45pt]{logo.pdf}\vspace*{-1pt}%
+}
+
+
+\begin{document}
+\postertitle{TITLE}{(sub title)}{Author}{(affiliation)}{date}
+
+\section{Itemize}
+\begin{itemize}
+ \item A style file for slides
+ \item Use \verb|\section{}| to make each page
+       \begin{itemize}
+	\item Nested sentence
+	\item Equation: $f(w) + g(y)$, or using align:
+	      \begin{align*}
+	       \max_{0 \le x \le 10} f(x) + \eta + \lambda,
+	      \end{align*}
+	      where $\lambda$ is a parameter
+	      \begin{itemize}
+	       \item Nested again
+	      \end{itemize}
+       \end{itemize}
+\end{itemize}
+
+\section{Enumerate}
+\begin{enumerate}
+ \item A style file for slides
+ \item Use \verb|\section{}| to make each page
+       \begin{enumerate}
+	\item Nested sentence
+	\item Equation: $f(x) + g(y)$, or using align:
+	      \begin{align*}
+	       \max_{0 \le x \le 10} f(x) + \eta + \lambda,
+	      \end{align*}
+	      where $\lambda$ is a parameter
+	      \begin{enumerate}
+	       \item Nested again
+	      \end{enumerate}
+       \end{enumerate}
+ \item Use \verb|\sectionn{}| to make a new slide with the same page count
+\end{enumerate}
+
+\section{Colors}
+\begin{itemize}
+ \item \emr{red} (\verb|\emr{red}|)
+ \item \emb{blue} (\verb|\emb{blue}|)
+ \item \emg{green} (\verb|\emg{green}|)
+ \item \embr{brown} (\verb|\embr{brown}|)
+\end{itemize}
+
+\newpage
+\section{Fonts}
+\begin{itemize}
+ \item Myriad Pro is used for English texts
+ \item 日本語はヒラギノ角ゴ
+\end{itemize}
+
+\end{document}
+
