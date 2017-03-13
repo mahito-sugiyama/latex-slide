@@ -2113,6 +2113,7 @@
 \setmonofont{Courier}
 % section without page number increment
 \newcommand{\section}[1]{\sectionpre*{#1}\addcontentsline{toc}{section}{#1}}
+\newcommand{\sectiond}[2]{\sectionpre*{#1}\addcontentsline{toc}{section}{#2}}
 \newcommand{\sectionn}[1]{\sectionpre*{#1}\setcounter{page}{\thepage - 1}}
 % color
 \definecolor{pink}{rgb}{0.886, 0.435, 0.667}
