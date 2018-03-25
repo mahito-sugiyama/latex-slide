@@ -1,5 +1,7 @@
 %%
 %% This is file `bxjsslide.cls',
+%%
+%% This is file `bxjsslide.cls',
 %% generated with the docstrip utility.
 %%
 %% The original source files were:
@@ -22,11 +24,8 @@
 %% in the same archive or directory.)
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{bxjsslide}
-  [2018/02/04 v1.7c BXJS document classes]
+  [2017/04/01 v1.5b BXJS document classes]
 %% このファイルは日本語文字を含みます.
-\def\bxjs@clsname{bxjsslide}
-\newif\ifjsc@needsp@tch
-\jsc@needsp@tchfalse
 \RequirePackage{calc}
 \RequirePackage{keyval}
 \RequirePackage{color} %% change by Mahito Sugiyama
@@ -39,6 +38,7 @@
 \let\jsReport=r
 \let\jsSlide=s
 \let\jsDocClass\jsSlide
+\def\bxjs@clsname{bxjsslide}
 \let\jsEngine=n
 \def\bxjs@test@engine#1#2{%
   \edef\bxjs@tmpa{\string#1}%
@@ -89,12 +89,6 @@
   #1\expandafter\@firstoftwo
   \else\expandafter\@secondoftwo
   \fi}
-\def\bxjs@cslet#1{%
-  \expandafter\let\csname#1\endcsname}
-\def\bxjs@csletcs#1#2{%
-  \expandafter\let\csname#1\expandafter\endcsname\csname#2\endcsname}
-\def\bxjs@catopt#1#2{%
-  #1\if\relax#1\relax\else\if\relax#2\relax\else,\fi\fi#2}
 \def\jsAtEndOfClass{%
   \expandafter\g@addto@macro\csname\bxjs@clsname.cls-h@@k\endcsname}
 \@onlypreamble\bxjs@restore@jltrcc
@@ -137,8 +131,6 @@
 \DeclareOption{b5j}{\bxjs@setpaper{{182truemm}{257truemm}}}
 \DeclareOption{a4var}{\bxjs@setpaper{{210truemm}{283truemm}}}
 \DeclareOption{b5var}{\bxjs@setpaper{{182truemm}{230truemm}}}
-\DeclareOption{a4varpaper}{\bxjs@setpaper{{210truemm}{283truemm}}}
-\DeclareOption{b5varpaper}{\bxjs@setpaper{{182truemm}{230truemm}}}
 \DeclareOption{letterpaper}{\bxjs@setpaper{letterpaper}}
 \DeclareOption{legalpaper}{\bxjs@setpaper{legalpaper}}
 \DeclareOption{executivepaper}{\bxjs@setpaper{executivepaper}}
@@ -199,28 +191,7 @@
 \DeclareOption{usemag}{\let\bxjs@magstyle\bxjs@magstyle@usemag}
 \DeclareOption{nomag}{\let\bxjs@magstyle\bxjs@magstyle@nomag}
 \DeclareOption{nomag*}{\let\bxjs@magstyle\bxjs@magstyle@xreal}
-\if j\jsEngine
-\hour\time \divide\hour by 60\relax
-\@tempcnta\hour \multiply\@tempcnta 60\relax
-\minute\time \advance\minute-\@tempcnta
-\DeclareOption{tombow}{%
-  \tombowtrue \tombowdatetrue
-  \setlength{\@tombowwidth}{.1\p@}%
-  \@bannertoken{%
-     \jobname\space(\number\year-\two@digits\month-\two@digits\day
-     \space\two@digits\hour:\two@digits\minute)}%
-  \maketombowbox}
-\DeclareOption{tombo}{%
-  \tombowtrue \tombowdatefalse
-  \setlength{\@tombowwidth}{.1\p@}%
-  \maketombowbox}
-\fi
-\if j\jsEngine
-\DeclareOption{mentuke}{%
-  \tombowtrue \tombowdatefalse
-  \setlength{\@tombowwidth}{\z@}%
-  \maketombowbox}
-\fi
+\newdimen\stockwidth \newdimen\stockheight
 \DeclareOption{oneside}{\@twosidefalse \@mparswitchfalse}
 \DeclareOption{twoside}{\@twosidetrue \@mparswitchtrue}
 \DeclareOption{vartwoside}{\@twosidetrue \@mparswitchfalse}
@@ -272,7 +243,7 @@
 \def\bxjs@kv@enablejfam@true{\let\bxjs@enablejfam=t}
 \def\bxjs@kv@enablejfam@false{\let\bxjs@enablejfam=f}
 \def\bxjs@kv@enablejfam@default{\let\bxjs@enablejfam\@undefined}
-\define@key{bxjs}{enablejfam}[true]{%
+\define@key{bxjs}{enablejfam}{%
   \bxjs@set@keyval{enablejfam}{#1}{}}
 \DeclareOption{disablejfam}{\let\bxjs@enablejfam=f}
 \let\ifjsDraft\iffalse
@@ -507,7 +478,7 @@
 \newif\ifbxjs@fancyhdr \bxjs@fancyhdrtrue
 \let\bxjs@kv@fancyhdr@true\bxjs@fancyhdrtrue
 \let\bxjs@kv@fancyhdr@false\bxjs@fancyhdrfalse
-\define@key{bxjs}{fancyhdr}[true]{%
+\define@key{bxjs}{fancyhdr}{%
   \bxjs@set@keyval{fancyhdr}{#1}{}}
 \newif\ifbxjs@dvi@opt
 \let\bxjs@dvidriver@@dvipdfmx=\bxjs@driver@@dvipdfmx
@@ -541,40 +512,15 @@
 \newif\ifbxjs@whole@zw@lines \bxjs@whole@zw@linestrue
 \let\bxjs@kv@wholezwlines@true\bxjs@whole@zw@linestrue
 \let\bxjs@kv@wholezwlines@false\bxjs@whole@zw@linesfalse
-\define@key{bxjs}{whole-zw-lines}[true]{\bxjs@set@keyval{wholezwlines}{#1}{}}
-\newif\ifbxjs@jaspace@cmd \bxjs@jaspace@cmdtrue
-\let\bxjs@kv@jaspacecmd@true\bxjs@jaspace@cmdtrue
-\let\bxjs@kv@jaspacecmd@false\bxjs@jaspace@cmdfalse
-\define@key{bxjs}{jaspace-cmd}[true]{\bxjs@set@keyval{jaspacecmd}{#1}{}}
-\define@key{bxjs}{xkanjiskip-cmd}[true]{\bxjs@set@keyval{jaspacecmd}{#1}{}}
-\newif\ifbxjs@fix@at@cmd \bxjs@fix@at@cmdtrue
-\let\bxjs@kv@fixatcmd@true\bxjs@fix@at@cmdtrue
-\let\bxjs@kv@fixatcmd@false\bxjs@fix@at@cmdfalse
-\define@key{bxjs}{fix-at-cmd}[true]{\bxjs@set@keyval{fixatcmd}{#1}{}}
+\define@key{bxjs}{whole-zw-lines}{\bxjs@set@keyval{wholezwlines}{#1}{}}
+\newif\ifbxjs@xkanjiskip@cmd \bxjs@xkanjiskip@cmdtrue
+\let\bxjs@kv@xkanjiskipcmd@true\bxjs@xkanjiskip@cmdtrue
+\let\bxjs@kv@xkanjiskipcmd@false\bxjs@xkanjiskip@cmdfalse
+\define@key{bxjs}{xkanjiskip-cmd}{\bxjs@set@keyval{xkanjiskipcmd}{#1}{}}
 \newif\ifbxjs@hyperref@enc \bxjs@hyperref@enctrue
 \let\bxjs@kv@hyperrefenc@true\bxjs@hyperref@enctrue
 \let\bxjs@kv@hyperrefenc@false\bxjs@hyperref@encfalse
-\define@key{bxjs}{hyperref-enc}[true]{\bxjs@set@keyval{hyperrefenc}{#1}{}}
-\chardef\bxjs@everyparhook@none=0
-\chardef\bxjs@everyparhook@compat=1
-\chardef\bxjs@everyparhook@modern=2
-\if j\jsEngine
-  \let\bxjs@everyparhook\bxjs@everyparhook@compat
-\else
-  \let\bxjs@everyparhook\bxjs@everyparhook@modern
-\fi
-\def\bxjs@kv@everyparhook@none{\let\bxjs@everyparhook\bxjs@everyparhook@none}
-\def\bxjs@kv@everyparhook@compat{\let\bxjs@everyparhook\bxjs@everyparhook@compat}
-\def\bxjs@kv@everyparhook@modern{\let\bxjs@everyparhook\bxjs@everyparhook@modern}
-\define@key{bxjs}{everyparhook}{\bxjs@set@keyval{everyparhook}{#1}{}}
-\chardef\bxjs@label@section@none=0
-\chardef\bxjs@label@section@compat=1
-\chardef\bxjs@label@section@modern=2
-\let\bxjs@label@section\bxjs@label@section@compat
-\def\bxjs@kv@labelsection@none{\let\bxjs@label@section\bxjs@label@section@none}
-\def\bxjs@kv@labelsection@compat{\let\bxjs@label@section\bxjs@label@section@compat}
-\def\bxjs@kv@labelsection@modern{\let\bxjs@label@section\bxjs@label@section@modern}
-\define@key{bxjs}{label-section}{\bxjs@set@keyval{labelsection}{#1}{}}
+\define@key{bxjs}{hyperref-enc}{\bxjs@set@keyval{hyperrefenc}{#1}{}}
 \let\bxjs@ltx@removeelement\@removeelement
 \def\@removeelement#1#2#3{%
   \def\reserved@a{#2}%
@@ -584,14 +530,6 @@
 \ExecuteOptions{36pt,a4paper,landscape,oneside,onecolumn,titlepage,final}
 \ProcessOptions\relax
 \bxjs@composite@proc
-\if@slide
-  \def\maybeblue{\@ifundefined{ver@color.sty}{}{\color{blue}}}
-\fi
-\if@landscape
-  \setlength\@tempdima  {\paperheight}
-  \setlength\paperheight{\paperwidth}
-  \setlength\paperwidth {\@tempdima}
-\fi
 \@onlypreamble\bxjs@purge@brace@elts
 \def\bxjs@purge@brace@elts{%
   \def\bxjs@tmpa{\@gobble}%
@@ -726,6 +664,14 @@
 \fi
 \bxjs@do@opt@jbase
 \let\Cjascale\jsScale
+\if@slide
+  \def\maybeblue{\@ifundefined{ver@color.sty}{}{\color{blue}}}
+\fi
+\if@landscape
+  \setlength\@tempdima  {\paperheight}
+  \setlength\paperheight{\paperwidth}
+  \setlength\paperwidth {\@tempdima}
+\fi
 \if \if p\jsEngine T\else\if n\jsEngine T\else F\fi\fi T
   \@tempcnta="80 \loop \ifnum\@tempcnta<"100
     \catcode\@tempcnta\active
@@ -739,14 +685,6 @@
 \g@addto@macro\@classoptionslist{,nosetpagesize}
 \ifbxjs@oldfontcommands
   \AtEndOfClass{\allowoldfontcommands}
-\fi
-\newdimen\stockwidth \newdimen\stockheight
-\begingroup\expandafter\expandafter\expandafter\endgroup
-\expandafter\ifx\csname iftombow\expandafter\endcsname\csname iftrue\endcsname
-  \setlength{\stockwidth}{\paperwidth}
-  \setlength{\stockheight}{\paperheight}
-  \advance \stockwidth 2in
-  \advance \stockheight 2in
 \fi
 \def\n@baseline{13}%
 \ifx\bxjs@magstyle\bxjs@magstyle@mag
@@ -774,15 +712,13 @@
 \expandafter\bxjs@tmpa\the\@tempcnta\@nil
 \edef\jsc@magscale{\strip@pt\@tempdima}
 \let\jsBaseFontSize\bxjs@param@basefontsize
-\newdimen\jsc@mpt
-\newdimen\jsc@mmm
 \ifjsc@mag
-  \jsc@mpt=1\p@
-  \jsc@mmm=1mm
+  \let\jsc@mpt\p@
+  \newdimen\jsc@mmm \jsc@mmm=1mm
   \catcode`\?=9 % \p@? read as \p@
 \else
-  \jsc@mpt=\jsc@magscale\p@
-  \jsc@mmm=\jsc@magscale mm
+  \newdimen\jsc@mpt \jsc@mpt=\jsc@magscale \p@
+  \newdimen\jsc@mmm \jsc@mmm=\jsc@magscale mm
   \catcode`\?=11 \let\p@?\jsc@mpt
 \fi
 \chardef\bxjs@qmcc=\catcode`\?\relax
@@ -837,13 +773,8 @@
 \newskip\jsc@smallskipamount
 \jsc@smallskipamount=3\jsc@mpt plus 1\jsc@mpt minus 1\jsc@mpt
 \chardef\bxjs@periodchar=`\.
-\bxjs@protected\def\bxjs@SE{%
-  \ifnum\spacefactor<\@m \spacefactor\@m
-  \else \spacefactor\sfcode\bxjs@periodchar
-  \fi}
-\ifbxjs@fix@at@cmd
-  \def\@{\bxjs@SE{}}
-\fi
+\bxjs@protected\def\bxjs@SE{\spacefactor\sfcode\bxjs@periodchar}
+\def\@{\bxjs@SE{}}
 \def\bxjs@tmpa{\def\set@fontsize##1##2##3}
 \expandafter\bxjs@tmpa\expandafter{%
   \set@fontsize{#1}{#2}{#3}%
@@ -866,13 +797,6 @@
 \else
   \def\jsc@setfontsize#1#2#3{%
     \@setfontsize#1{#2\jsc@mpt}{#3\jsc@mpt}}
-  \ifjsWitheTeX\if j\jsEngine\else
-    \def\jsc@setfontsize#1#2#3{%
-      \edef\bxjs@sfs@next{%
-        \unexpanded{\@setfontsize#1}%
-           {\the\dimexpr#2\jsc@mpt\relax}{\the\dimexpr#3\jsc@mpt\relax}%
-      }\bxjs@sfs@next}
-  \fi\fi
 \fi
 \emergencystretch 3\jsZw
 \newif\ifnarrowbaselines
@@ -962,15 +886,15 @@
 \newcommand{\Huge}{\jsc@setfontsize\Huge\@xxvpt{33}}
 \newcommand{\HUGE}{\jsc@setfontsize\HUGE{30}{40}}
 \everydisplay=\expandafter{\the\everydisplay \narrowbaselines}
-\newcommand{\headfont}{\sffamily\bfseries\gtfamily} %% change by Mahito Sugiyama
+\newcommand{\headfont}{\sffamily\bfseries} %% change by Mahito Sugiyama
 \setlength\columnsep{2\Cwd}
-\setlength\columnseprule{0\jsc@mpt}
-\setlength\lineskip{1\jsc@mpt}
-\setlength\normallineskip{1\jsc@mpt}
-\setlength\lineskiplimit{1\jsc@mpt}
-\setlength\normallineskiplimit{1\jsc@mpt}
+\setlength\columnseprule{0\p@}
+\setlength\lineskip{1\p@?}
+\setlength\normallineskip{1\p@?}
+\setlength\lineskiplimit{1\p@?}
+\setlength\normallineskiplimit{1\p@?}
 \renewcommand{\baselinestretch}{}
-\setlength\parskip{0\jsc@mpt}
+\setlength\parskip{0\p@}
 \if@slide
   \setlength\parindent{0\p@}
 \else
@@ -1170,10 +1094,10 @@
         \hbox to \fullwidth{{\rightmark}\hfil\textbf{\thepage}}}\hss}%
     \let\@mkboth\markboth
     \def\sectionmark##1{\markboth{%
-       \ifnum \c@secnumdepth >\z@ \bxjs@label@sect{section}\hskip1\jsZw\fi
+       \ifnum \c@secnumdepth >\z@ \thesection \hskip1\jsZw\fi
        ##1}{}}%
     \def\subsectionmark##1{\markright{%
-       \ifnum \c@secnumdepth >\@ne \bxjs@label@sect{subsection}\hskip1\jsZw\fi
+       \ifnum \c@secnumdepth >\@ne \thesubsection \hskip1\jsZw\fi
        ##1}}%
   }
 \else % if not twoside
@@ -1184,7 +1108,7 @@
         \hbox to \fullwidth{{\rightmark}\hfil\textbf{\thepage}}}\hss}%
     \let\@mkboth\markboth
     \def\sectionmark##1{\markright{%
-        \ifnum \c@secnumdepth >\z@ \bxjs@label@sect{section}\hskip1\jsZw\fi
+        \ifnum \c@secnumdepth >\z@ \thesection \hskip1\jsZw\fi
         ##1}}}
 \fi
 \def\ps@myheadings{%
@@ -1233,16 +1157,29 @@
         \vskip-13pt\raisebox{0pt}[0pt][30pt]{\parbox[t]{\linewidth}{\renewcommand{\baselinestretch}{1}\normalsize \@date}}\\% %% change by Mahito Sugiyama
         \vskip-40pt\hfill\includegraphics[height=35pt]{logo.pdf} %% change by Mahito Sugiyama
         \begin{flushleft} %% change by Mahito Sugiyama
+        % {\footnotesize \@date}% %% change by Mahito Sugiyama
+        % \begin{center} %% change by Mahito Sugiyama
           \mbox{} \\[1\jsZw]
           \huge\renewcommand{\baselinestretch}{.9} %% change by Mahito Sugiyama
           {\headfont\@title}\LARGE\\% %% change by Mahito Sugiyama
           {\headfont\@subtitle} %% change by Mahito Sugiyama
+          % \large %% change by Mahito Sugiyama
+          % {\maybeblue\hrule height0\p@? depth2\p@?\relax}\par %% change by Mahito Sugiyama
           \jsc@smallskip
           {\vskip 5pt\color{green}\hrule height0\p@? depth.5\p@?\relax}\par %% change by Mahito Sugiyama
+          % \@title %% change by Mahito Sugiyama
+          % \ifx\bxjs@subtitle\@undefined\else %% change by Mahito Sugiyama
+            % \par\vskip\z@ %% change by Mahito Sugiyama
+            % {\small \bxjs@subtitle\par} %% change by Mahito Sugiyama
+          % \fi %% change by Mahito Sugiyama
+          % \jsc@smallskip %% change by Mahito Sugiyama
+          % {\maybeblue\hrule height0\p@? depth2\p@?\relax}\par %% change by Mahito Sugiyama
           \vfill
+          % {\small \@author}% %% change by Mahito Sugiyama
           \begin{flushright} %% change by Mahito Sugiyama
             {\large \@author}\setlength{\baselineskip}{17pt}% %% change by Mahito Sugiyama
           \end{flushright} %% change by Mahito Sugiyama
+        % \end{center} %% change by Mahito Sugiyama
         \end{flushleft} %% change by Mahito Sugiyama
       \else
       \vskip 60\p@?
@@ -1336,19 +1273,6 @@
     \ifvoid\@abstractbox\else\centerline{\box\@abstractbox}\vskip1.5em\fi
   }
 \fi
-\def\bxjs@label@sect#1{%
-  \expandafter\ifx\csname label#1\endcsname\relax
-    \csname the#1\endcsname
-  \else \csname label#1\endcsname
-  \fi}
-\def\@seccntformat#1{\bxjs@label@sect{#1}\quad}
-\ifnum\bxjs@label@section=\bxjs@label@section@compat\else
-\def\@secapp{\presectionname}
-\def\@secpos{\postsectionname}
-\fi
-\ifnum\bxjs@label@section=\bxjs@label@section@modern
-\def\labelsection{\@secapp\thesection\@secpos}
-\fi
 \def\@startsection#1#2#3#4#5#6{%
   \if@noskipsec \leavevmode \fi
   \par
@@ -1373,10 +1297,6 @@
   \@ifstar
     {\@ssect{#3}{#4}{#5}{#6}}%
     {\@dblarg{\@sect{#1}{#2}{#3}{#4}{#5}{#6}}}}
-\ifnum\bxjs@everyparhook=\bxjs@everyparhook@compat
-  \let\bxjs@if@ceph\@firstofone
-\else \let\bxjs@if@ceph\@gobble
-\fi
 \def\@sect#1#2#3#4#5#6[#7]#8{%
   \ifnum #2>\c@secnumdepth
     \let\@svsec\@empty
@@ -1392,7 +1312,7 @@
       \csname #1mark\endcsname{#7}%
       \addcontentsline{toc}{#1}{%
         \ifnum #2>\c@secnumdepth \else
-          \protect\numberline{\bxjs@label@sect{#1}}%
+          \protect\numberline{\csname the#1\endcsname}%
         \fi
         #7}}% 目次にフルネームを載せるなら #8
   \else
@@ -1405,7 +1325,7 @@
     \csname #1mark\endcsname{#7}%
     \addcontentsline{toc}{#1}{%
       \ifnum #2>\c@secnumdepth \else
-        \protect\numberline{\bxjs@label@sect{#1}}%
+        \protect\numberline{\csname the#1\endcsname}%
       \fi
       #7}% 目次にフルネームを載せるならここは #8
   \fi
@@ -1424,23 +1344,29 @@
         \unskip
         \@tempskipa #1\relax
         \hskip -\@tempskipa
+        \bxjs@ltj@inhibitglue
       \else
         \clubpenalty \@clubpenalty
-        \everypar\expandafter{\bxjs@if@ceph\everyparhook}%
-      \fi\bxjs@if@ceph\everyparhook}%
+        \everypar{\everyparhook}%
+      \fi\everyparhook}%
   \else
     \par \nobreak
     \vskip \@tempskipa
     \@afterheading
   \fi
   \if@slide
+    % {\vskip\if@twocolumn-5\jsc@mpt\else-6\jsc@mpt\fi %% change by Mahito Sugiyama
+    %  \maybeblue\hrule height0\jsc@mpt depth1\jsc@mpt %% change by Mahito Sugiyama
+    %  \vskip\if@twocolumn 4\jsc@mpt\else 7\jsc@mpt\fi\relax}% %% change by Mahito Sugiyama
     {\vskip-4\p@?\color{green}\hrule height0\p@? depth.5\p@?\vskip10\p@?\relax} %% change by Mahito Sugiyama
   \fi
   \par  % 2000-12-18
   \ignorespaces}
 \def\@ssect#1#2#3#4#5{%
+  % \@tempskipa #3\relax %% change by Mahito Sugiyama
   \@tempskipa #3\rule[-4pt]{0pt}{18pt}\relax %% change by Mahito Sugiyama
   \ifdim \@tempskipa<\z@
+    % \def\@svsechd{#4{\hskip #1\relax #5}}% %% change by Mahito Sugiyama
     \def\@svsechd{#4{\hskip #1\relax #5\rule[-4pt]{0pt}{10pt}}}% %% change by Mahito Sugiyama
   \else
     \begingroup
@@ -1450,6 +1376,7 @@
     \endgroup
   \fi
   \@xsect{#3}}
+\let\bxjs@ltj@inhibitglue\@empty
 \newcommand*\chaptermark[1]{}
 \setcounter{secnumdepth}{3}
 \newcounter{part}
@@ -1459,13 +1386,9 @@
 \newcounter{paragraph}[subsubsection]
 \newcounter{subparagraph}[paragraph]
 \renewcommand{\thepart}{\@Roman\c@part}
-\ifnum\bxjs@label@section=\bxjs@label@section@compat
+% \renewcommand{\thesection}{\@arabic\c@section}
 \renewcommand{\thesection}{\presectionname\@arabic\c@section\postsectionname}
 \renewcommand{\thesubsection}{\@arabic\c@section.\@arabic\c@subsection}
-\else
-\renewcommand{\thesection}{\@arabic\c@section}
-\renewcommand{\thesubsection}{\thesection.\@arabic\c@subsection}
-\fi
 \renewcommand{\thesubsubsection}{%
    \thesubsection.\@arabic\c@subsubsection}
 \renewcommand{\theparagraph}{%
@@ -1509,11 +1432,13 @@
   \vskip 3ex
   \@afterheading}
 \if@twocolumn
+  % \newcommand{\section}{% %% change by Mahito Sugiyama
   \newcommand{\sectionpre}{% %% change by Mahito Sugiyama
     \@startsection{section}{1}{\z@}%
     {0.6\Cvs}{0.4\Cvs}%
     {\normalfont\large\headfont\raggedright}}
 \else
+  % \newcommand{\section}{% %% change by Mahito Sugiyama
   \newcommand{\sectionpre}{% %% change by Mahito Sugiyama
     \if@slide\clearpage\fi
     \@startsection{section}{1}{\z@}%
@@ -1541,8 +1466,7 @@
     {\if@slide .5\Cvs \@plus.3\Cdp \else \z@ \fi}%
     {\normalfont\normalsize\headfont}}
 \fi
-\newcommand\jsParagraphMark{\relax\jsJaChar{■}}
-\let\bxjs@org@paragraph@mark\jsParagraphMark
+\newcommand\jsParagraphMark{\jsJaChar{■}}
 \ifx\bxjs@paragraph@mark\@empty
   \let\jsParagraphMark\@empty
 \else\ifx\bxjs@paragraph@mark\@undefined\else
@@ -1733,16 +1657,10 @@
 \newcommand{\appendix}{\par
   \setcounter{section}{0}%
   \setcounter{subsection}{0}%
-  \ifnum\bxjs@label@section=\bxjs@label@section@compat
   \gdef\presectionname{\appendixname}%
   \gdef\postsectionname{}%
   \gdef\thesection{\presectionname\@Alph\c@section\postsectionname}%
-  \gdef\thesubsection{\@Alph\c@section.\@arabic\c@subsection}%
-  \else
-  \gdef\@secapp{\appendixname}%
-  \gdef\@secpos{}%
-  \gdef\thesection{\@Alph\c@section}%
-  \fi}
+  \gdef\thesubsection{\@Alph\c@section.\@arabic\c@subsection}}
 \setlength\arraycolsep{5\p@?}
 \setlength\tabcolsep{6\p@?}
 \setlength\arrayrulewidth{.4\p@}
@@ -2049,10 +1967,7 @@
   \llap{\@makefnmark\hskip0.3\jsZw}#1}
 \let\jsInhibitGlueAtParTop\@empty
 \def\everyparhook{\jsInhibitGlueAtParTop}
-\ifnum\bxjs@everyparhook=\bxjs@everyparhook@compat
 \AtBeginDocument{\everypar{\everyparhook}}
-\fi
-\ifx j\jsEngine
 \def\@inhibitglue{%
   \futurelet\@let@token\@@inhibitglue}
 \begingroup
@@ -2080,17 +1995,11 @@
       \inhibitglue
     \fi
   \fi}
-\fi
-\ifnum\bxjs@everyparhook=\bxjs@everyparhook@compat
 \def\@doendpe{%
   \@endpetrue
   \def\par{%
     \@restorepar\clubpenalty\@clubpenalty\everypar{\everyparhook}\par\@endpefalse}%
   \everypar{{\setbox\z@\lastbox}\everypar{\everyparhook}\@endpefalse\everyparhook}}
-\def\@setminipage{%
-  \@minipagetrue
-  \everypar{\@minipagefalse\everypar{\everyparhook}}%
-}
 \def\@item[#1]{%
   \if@noparitem
     \@donoparitem
@@ -2134,6 +2043,7 @@
       \clubpenalty \@clubpenalty
       \everypar{\everyparhook}%
     \fi
+    \bxjs@ltj@inhibitglue
     \everyparhook}%
   \if@noitemarg
     \@noitemargfalse
@@ -2167,9 +2077,6 @@
       \clubpenalty \@clubpenalty
       \everypar{\everyparhook}%
     \fi\everyparhook}}
-\fi
-\ifnum\bxjs@everyparhook=\bxjs@everyparhook@none\else
-\AtEndOfPackage{%
 \def\@gnewline #1{%
   \ifvmode
     \@nolnerr
@@ -2177,8 +2084,6 @@
     \unskip \reserved@e {\reserved@f#1}\nobreak \hfil \break \null
     \jsInhibitGlue \ignorespaces
   \fi}
-}
-\fi
 \if@jslogo
   \IfFileExists{jslogo.sty}{%
     \RequirePackage{jslogo}%
@@ -2231,32 +2136,13 @@
   \else \expandafter\@secondoftwo \fi}
 }
 \bxjs@decl@Seireki@cmds
-\let\bxjs@unxp\@firstofone \let\bxjs@onxp\@firstofone
-\bxjs@test@engine\unexpanded{\let\bxjs@unxp\unexpanded
-  \def\bxjs@onxp{\unexpanded\expandafter}}
+\let\bxjs@unxp\@firstofone
+\bxjs@test@engine\unexpanded{\let\bxjs@unxp\unexpanded}
 \if \if p\jsEngine T\else\if n\jsEngine T\else F\fi\fi T
   \def\bxjs@iai{\noexpand~}
 \else \def\bxjs@iai{}
 \fi
-\newcount\bxjs@jayear
-\let\bxjs@gengo\@empty \bxjs@jayear\year
-\@tempcnta=\the\year\two@digits\month\two@digits\day\relax
-\ifnum\@tempcnta<19700101
-\else\ifnum\@tempcnta<19890108
-  \def\bxjs@gengo{昭和}\advance\bxjs@jayear-1925\relax
-  \let\heisei\bxjs@jayear
-\else\ifnum\@tempcnta<20190501
-  \def\bxjs@gengo{平成}\advance\bxjs@jayear-1988\relax
-  \let\heisei\bxjs@jayear
-\else
-\fi\fi\fi
-\edef\jayear{%
-  \ifx\bxjs@gengo\@empty \the\bxjs@jayear\bxjs@iai
-  \else \bxjs@onxp{\bxjs@gengo}%
-    \ifnum\bxjs@jayear=\@ne \bxjs@unxp{元}%
-    \else \bxjs@iai\the\bxjs@jayear\bxjs@iai
-    \fi
-  \fi}
+\newcount\heisei \heisei\year \advance\heisei-1988\relax
 \edef\bxjs@today{%
   \if@english
     \ifcase\month\or
@@ -2264,12 +2150,15 @@
       July\or August\or September\or October\or November\or December\fi
       \space\number\day, \number\year
   \else
-    \noexpand\bxjs@if@use@seireki{%
+    \ifnum\heisei>\@ne
+      \expandafter\noexpand\expandafter\bxjs@if@use@seireki
+    \else \expandafter\@firstoftwo
+    \fi {%
       \number\year\bxjs@iai\bxjs@unxp{年}%
       \bxjs@iai\number\month\bxjs@iai\bxjs@unxp{月}%
       \bxjs@iai\number\day\bxjs@iai\bxjs@unxp{日}%
     }{%
-      \bxjs@onxp{\jayear}\bxjs@unxp{年}%
+      \bxjs@unxp{平成}\bxjs@iai\number\heisei\bxjs@iai\bxjs@unxp{年}%
       \bxjs@iai\number\month\bxjs@iai\bxjs@unxp{月}%
       \bxjs@iai\number\day\bxjs@iai\bxjs@unxp{日}%
     }%
@@ -2305,6 +2194,9 @@
 \setlength{\voffset}{6pt}
 \addtolength{\textheight}{-5pt}
 % font
+%\setjamainfont[RawFeature=-palt,BoldFont=KozGoPro-Medium]{Kozuka Gothic Pro}
+%\setjasansfont[RawFeature=-palt,BoldFont=KozGoPro-Medium]{Kozuka Gothic Pro}
+%\setjamonofont[RawFeature=-palt,BoldFont=KozGoPro-Medium]{Kozuka Gothic Pro}
 \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase,Scale=1.05}
 \setmainfont[Mapping=tex-text,BoldFont={Myriad Pro Semibold},BoldItalicFont={Myriad Pro Semibold Italic}]{Myriad Pro}
 \setsansfont[Mapping=tex-text,BoldFont={Myriad Pro Semibold},BoldItalicFont={Myriad Pro Semibold Italic}]{Myriad Pro}
