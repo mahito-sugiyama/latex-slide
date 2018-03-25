@@ -12,5 +12,5 @@ See the file "template.tex".
 
 ## Contact
 Author: Mahito Sugiyama  
-Affiliation: National Institute of Informatics
+Affiliation: National Institute of Informatics  
 E-mail: mahito@nii.ac.jp
