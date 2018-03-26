@@ -21,8 +21,8 @@
 %% same distribution. (The sources need not necessarily be
 %% in the same archive or directory.)
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bxjsslide}
-  [2018/02/04 v1.7c BXJS document classes]
+\ProvidesClass{bxjsslidemd} %% change by Mahito Sugiyama
+  [2018/02/04 v1.7c BXJS document classes, modified by Mahito Sugiyama] %% change by Mahito Sugiyama
 %% このファイルは日本語文字を含みます.
 \def\bxjs@clsname{bxjsslide}
 \newif\ifjsc@needsp@tch
