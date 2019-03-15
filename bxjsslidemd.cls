@@ -30,6 +30,7 @@
 \RequirePackage{calc}
 \RequirePackage{keyval}
 \RequirePackage{color} %% change by Mahito Sugiyama
+\RequirePackage{graphicx} %% change by Mahito Sugiyama
 \IfFileExists{bxjscompat.sty}{%
   \let\jsAtEndOfClass\@gobble
   \RequirePackage{bxjscompat}%
