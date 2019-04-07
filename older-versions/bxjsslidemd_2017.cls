@@ -22,7 +22,7 @@
 %% in the same archive or directory.)
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{bxjsslidemd} %% change by Mahito Sugiyama
-  [2019/01/13 v1.9e BXJS document classes, modified by Mahito Sugiyama] %% change by Mahito Sugiyama
+  [2018/02/04 v1.7c BXJS document classes, modified by Mahito Sugiyama] %% change by Mahito Sugiyama
 %% このファイルは日本語文字を含みます.
 \def\bxjs@clsname{bxjsslide}
 \newif\ifjsc@needsp@tch
@@ -70,9 +70,6 @@
    {It's a fatal error. I'll quit right now.}
   \expandafter\@firstofone
 \fi{\endinput\@@end}
-\ifx l\jsEngine
-  \directlua{ bxjs = {} }
-\fi
 \ifjsWitheTeX \let\bxjs@protected\protected
 \else \let\bxjs@protected\@empty
 \fi
@@ -89,11 +86,6 @@
 \let\PackageWarningNoLine\bxjs@tmpa
 \@nameuse{RevokeOldLuaTeXBehavior}
 \let\ifjsInPdfMode\ifpdf
-\newif\ifbxjs@TUenc
-\def\bxjs@tmpa{TU}\edef\bxjs@tmpb{\f@encoding}
-\ifx\bxjs@tmpa\bxjs@tmpb
-  \bxjs@TUenctrue
-\fi
 \@gobbletwo\if\if \def\bxjs@cond#1\fi{%
   #1\expandafter\@firstoftwo
   \else\expandafter\@secondoftwo
@@ -104,67 +96,18 @@
   \expandafter\let\csname#1\expandafter\endcsname\csname#2\endcsname}
 \def\bxjs@catopt#1#2{%
   #1\if\relax#1\relax\else\if\relax#2\relax\else,\fi\fi#2}
-\def\bxjs@ifplus#1{\@ifnextchar+{\@firstoftwo{#1}}}
-\let\c@bxjs@tempcnta\@tempcnta
-\def\bxjs@gset@tempcnta{\setcounter{bxjs@tempcnta}}
-\def\jsSetQHLength#1#2{%
-  \begingroup
-    \bxjs@parse@qh{#2}%
-    \ifx\bxjs@tmpb\relax
-      \setlength\@tempdima{#2}%
-      \xdef\bxjs@g@tmpa{\the\@tempdima}%
-    \else \global\let\bxjs@g@tmpa\bxjs@tmpb
-    \fi
-  \endgroup
-  #1=\bxjs@g@tmpa\relax}
-\if j\jsEngine \def\bxjs@parse@qh@units{zw,zh}
-\else \def\bxjs@parse@qh@units{trueQ,trueH,Q,H,zw,zh}
-\fi
-\def\bxjs@parse@qh#1{%
-  \let\bxjs@tmpb\relax
-  \@for\bxjs@tmpa:=\bxjs@parse@qh@units\do{%
-    \ifx\bxjs@tmpb\relax
-      \edef\bxjs@next{{\bxjs@tmpa}{#1}}%
-      \expandafter\bxjs@parse@qh@a\csname bxjs@unit@\bxjs@tmpa\expandafter
-          \endcsname\bxjs@next
-    \fi}}
-\def\bxjs@parse@qh@a#1#2#3{%
-  \def\bxjs@next##1#2\@nil##2\@nnil{\bxjs@parse@qh@b{##1}{##2}#1}%
-  \bxjs@next#3\@nil#2\@nil\@nnil}
-\def\bxjs@parse@qh@b#1#2#3{%
-  \ifx\@nnil#2\@nnil\else
-    \ifx#3\relax
-      \ClassError\bxjs@clsname
-       {You cannot use '\bxjs@tmpa' here}{\@ehc}%
-      \def\bxjs@tmpb{0pt}%
-    \else
-      \@tempdimb#3\relax \@tempdimb#1\@tempdimb
-      \edef\bxjs@tmpb{\the\@tempdimb}%
-    \fi
-  \fi}
-  \def\bxjs@unit@Q{0.25mm}\let\bxjs@unit@H\bxjs@unit@Q
-\@onlypreamble\bxjs@begin@document@hook
-\let\bxjs@begin@document@hook\@empty
-\AtBeginDocument{\bxjs@begin@document@hook}
-\@onlypreamble\bxjs@post@option@hook
-\let\bxjs@post@option@hook\@empty
-\@onlypreamble\bxjs@pre@jadriver@hook
-\let\bxjs@pre@jadriver@hook\@empty
 \def\jsAtEndOfClass{%
   \expandafter\g@addto@macro\csname\bxjs@clsname.cls-h@@k\endcsname}
-\@onlypreamble\bxjs@tmpdo
-\@onlypreamble\bxjs@tmpdo@a
-\@onlypreamble\bxjs@tmpdo@b
-\@onlypreamble\bxjs@tmpdo@c
-\@onlypreamble\bxjs@tmpdo@d
+\@onlypreamble\bxjs@restore@jltrcc
+\let\bxjs@restore@jltrcc\@empty
 \if l\jsEngine
-\def\bxjs@tmpdo#1{%
-  \xdef\bxjs@pre@jadriver@hook{%
-    \bxjs@pre@jadriver@hook
+\def\bxjs@change@jltrcc#1{%
+  \xdef\bxjs@restore@jltrcc{%
+    \bxjs@restore@jltrcc
     \catcode`#1=\the\catcode`#1\relax}%
   \catcode`#1=11\relax}
-\@tfor\bxjs@tmpa:=和西暦\do
-  {\expandafter\bxjs@tmpdo\bxjs@tmpa}
+\@tfor\bxjs@x:=西暦\do
+  {\expandafter\bxjs@change@jltrcc\bxjs@x}
 \fi
 \bxjs@robust@def\jsInhibitGlue{%
   \ifx\inhibitglue\@undefined\else \inhibitglue \fi}
@@ -181,7 +124,6 @@
 \newif\if@restonecol
 \newif\if@titlepage
 \newif\if@enablejfam \@enablejfamfalse
-\@onlypreamble\bxjs@setpaper
 \def\bxjs@setpaper#1{\def\bxjs@param@paper{#1}}
 \DeclareOption{a3paper}{\bxjs@setpaper{a3paper}}
 \DeclareOption{a4paper}{\bxjs@setpaper{a4paper}}
@@ -210,12 +152,30 @@
 \def\bxjs@param@basefontsize{10pt}
 \def\jsUnusualPtSize{-20}
 \def\bxjs@setbasefontsize#1{%
-  \jsSetQHLength\@tempdima{#1}%
+  \bxjs@setbasefontlength\@tempdima{#1}%
   \edef\bxjs@param@basefontsize{\the\@tempdima}%
   \ifdim\@tempdima=10pt         \long\def\@ptsize{0}%
   \else\ifdim\@tempdima=10.95pt \long\def\@ptsize{1}%
   \else\ifdim\@tempdima=12pt    \long\def\@ptsize{2}%
   \else \long\edef\@ptsize{\jsUnusualPtSize}\fi\fi\fi}
+\def\bxjs@setbasefontlength#1#2{%
+  \bxjs@setbasefontlength@a#2true\@nnil
+  \ifx j\jsEngine \setlength#1{#2}%
+  \else
+    \bxjs@setbasefontlength@b#2\@nil Q\@nil\@nnil
+    \ifx\bxjs@tmpa\relax \setlength#1{#2}%
+    \else \@tempdimc0.25mm #1=\bxjs@tmpa\@tempdimc
+    \fi
+  \fi}
+\def\bxjs@setbasefontlength@b#1Q\@nil#2\@nnil{%
+  \ifx\@nnil#2\@nnil \let\bxjs@tmpa\relax
+  \else \def\bxjs@tmpa{#1}%
+  \fi}
+\def\bxjs@setbasefontlength@a#1true#2\@nnil{%
+  \ifx\@nnil#2\@nnil\else
+    \ClassWarningNoLine\bxjs@clsname
+    {You should not use 'true' lengths here}%
+  \fi}
 \newif\ifjsc@mag
 \newif\ifjsc@mag@xreal
 \DeclareOption{8pt}{\bxjs@setbasefontsize{8pt}}
@@ -322,7 +282,7 @@
   \expandafter\let\expandafter\ifjsDraft\csname if#1\endcsname}
 \DeclareOption{draft}{\bxjs@draft{true}\setlength\overfullrule{5pt}}
 \DeclareOption{final}{\bxjs@draft{false}\setlength\overfullrule{0pt}}
-\g@addto@macro\bxjs@begin@document@hook{%
+\AtBeginDocument{%
   \expandafter\ifx\csname ifdraft\endcsname\relax
     \expandafter\let\csname ifdraft\expandafter\endcsname
      \csname ifjsDraft\endcsname
@@ -362,8 +322,9 @@
       \else \@tempdimb=\@tempcntb\@ne \fi}%
     \xdef\bxjs@gtmpa{\the\@tempdimb}%
   \endgroup #1=\bxjs@gtmpa\relax}
+\let\bxjs@composite@proc\relax
 \DeclareOption{pandoc}{%
-  \g@addto@macro\bxjs@post@option@hook{%
+  \def\bxjs@composite@proc{%
     \bxjs@oldfontcommandstrue
     \setkeys{bxjs}{ja=pandoc}%
     \let\bxjs@engine@given=*}%
@@ -428,6 +389,26 @@
   \let\bxjs@driver@given\bxjs@driver@@xetex}
 \DeclareOption{dvipdfmx-if-dvi}{%
   \setkeys{bxjs}{dvi=dvipdfmx}}
+\newif\ifbxjs@usezw \bxjs@usezwtrue
+\DeclareOption{nozw}{%
+  \bxjs@usezwfalse}
+\DeclareOption{zw}{%
+  \bxjs@usezwtrue}
+\newif\ifbxjs@disguise@js \bxjs@disguise@jstrue
+\DeclareOption{nojs}{%
+  \bxjs@disguise@jsfalse}
+\DeclareOption{js}{%
+  \bxjs@disguise@jstrue}
+\newif\ifbxjs@precisetext
+\DeclareOption{noprecisetext}{%
+  \bxjs@precisetextfalse}
+\DeclareOption{precisetext}{%
+  \bxjs@precisetexttrue}
+\newif\ifbxjs@simplejasetup \bxjs@simplejasetuptrue
+\DeclareOption{nosimplejasetup}{%
+  \bxjs@simplejasetupfalse}
+\DeclareOption{simplejasetup}{%
+  \bxjs@simplejasetuptrue}
 \newif\ifbxjs@bigcode \bxjs@bigcodefalse
 \edef\bxjs@tmpa{\expandafter\noexpand\csname\endcsname}
 \def\bxjs@tmpb#1 #2#3\@nil{%
@@ -442,27 +423,16 @@
   \bxjs@oldfontcommandsfalse}
 \DeclareOption{oldfontcommands}{%
   \bxjs@oldfontcommandstrue}
-\DeclareOption*{%
-  \def\bxjs@next{\bxjs@safe@setkeys{bxjs}}%
-  \expandafter\bxjs@next\expandafter{\CurrentOption}}
+\def\bxjs@setkey{%
+  \expandafter\bxjs@setkey@a\expandafter{\CurrentOption}}
+\def\bxjs@setkey@a{\bxjs@safe@setkeys{bxjs}}
+\DeclareOption*{\bxjs@setkey}
 \def\bxjs@safe@setkeys#1#2{%
-  \let\bxjs@save@KV@errx\KV@errx \let\KV@errx\@gobble
+  \let\bxjs@KV@errx\KV@errx
+  \let\KV@errx\bxjs@safe@setkeys@a
   \setkeys{#1}{#2}%
-  \let\KV@errx\bxjs@save@KV@errx}
-\@onlypreamble\bxjs@declare@enum@option
-\def\bxjs@declare@enum@option#1#2{%
-  \define@key{bxjs}{#1}{%
-    \expandafter\ifx\csname bxjs@#2@@##1\endcsname\relax
-      \bxjs@error@keyval{#1}{##1}%
-    \else \bxjs@csletcs{bxjs@#2}{bxjs@#2@@##1}%
-    \fi}}
-\@onlypreamble\bxjs@declare@bool@option
-\def\bxjs@declare@bool@option#1#2{%
-  \define@key{bxjs}{#1}[true]{%
-    \expandafter\ifx\csname bxjs@#2##1\endcsname\relax
-      \bxjs@error@keyval{#1}{##1}%
-    \else \@nameuse{bxjs@#2##1}%
-    \fi}}
+  \let\KV@errx\bxjs@KV@errx}
+\def\bxjs@safe@setkeys@a#1{}
 \def\bxjs@set@keyval#1#2#3{%
   \expandafter\let\expandafter\bxjs@next\csname bxjs@kv@#1@#2\endcsname
   \ifx\bxjs@next\relax
@@ -474,25 +444,30 @@
 \def\bxjs@error@keyval#1#2{%
   \ClassError\bxjs@clsname
    {Invalid value '#2' for option #1}\@ehc}
+\newif\ifbxjs@scaleset
 \def\jsScale{0.924715}
-\define@key{bxjs}{base}{%
-  \edef\bxjs@base@opt{#1}%
-  \bxjs@setbasefontsize{#1}}
-\define@key{bxjs}{fontsize}{\setkeys{bxjs}{base=#1}}
-\define@key{bxjs}{jbase}{\edef\bxjs@jbase@opt{#1}}
-\define@key{bxjs}{jafontsize}{\setkeys{bxjs}{jbase=#1}}
+\define@key{bxjs}{base}{\bxjs@setbasefontsize{#1}}
+\@onlypreamble\bxjs@do@opt@jbase
+\let\bxjs@do@opt@jbase\relax
+\define@key{bxjs}{jbase}{\bxjs@setjbasefontsize{#1}}
+\def\bxjs@setjbasefontsize#1{%
+  \def\bxjs@do@opt@jbase{%
+    \bxjs@setbasefontlength\@tempdima{#1}%
+    \bxjs@invscale\@tempdima\jsScale
+    \bxjs@setbasefontsize{\@tempdima}}}
 \define@key{bxjs}{scale}{%
-  \edef\bxjs@scale@opt{#1}%
-  \let\jsScale\bxjs@scale@opt}
-\define@key{bxjs}{jafontscale}{\setkeys{bxjs}{scale=#1}}
-\DeclareOption{noscale}{\setkeys{bxjs}{scale=1}}
+  \bxjs@scalesettrue
+  \edef\jsScale{#1}}
+\DeclareOption{noscale}{%
+  \bxjs@scalesettrue
+  \def\jsScale{1}}
 \let\bxjs@param@mag\relax
 \define@key{bxjs}{mag}{\edef\bxjs@param@mag{#1}}
 \define@key{bxjs}{paper}{\edef\bxjs@param@paper{#1}}
 \let\bxjs@jadriver\relax
-\define@key{bxjs}{jadriver}{\edef\bxjs@jadriver@opt{#1}}
+\define@key{bxjs}{jadriver}{\edef\bxjs@jadriver{#1}}
 \define@key{bxjs}{ja}[\relax]{%
-  \ifx\relax#1\else\edef\bxjs@jadriver@opt{#1}\fi}
+  \ifx\relax#1\else\edef\bxjs@jadriver{#1}\fi}
 \let\jsJaFont\@empty
 \define@key{bxjs}{jafont}{\edef\jsJaFont{#1}}
 \let\jsJaParam\@empty
@@ -561,11 +536,7 @@
 \define@key{bxjs}{layout}{%
   \bxjs@set@keyval{layout}{#1}{}}
 \define@key{bxjs}{textwidth-limit}{%
-  \edef\bxjs@textwidth@limit@opt{#1}}
-\define@key{bxjs}{textwidth}{\edef\bxjs@textwidth@opt{#1}}
-\define@key{bxjs}{line_length}{\setkeys{bxjs}{textwidth=#1}}
-\define@key{bxjs}{number-of-lines}{\edef\bxjs@number@of@lines@opt{#1}}
-\define@key{bxjs}{number_of_lines}{\setkeys{bxjs}{number-of-lines=#1}}
+  \edef\bxjs@textwidth@limit{#1}}
 \define@key{bxjs}{paragraph-mark}{%
   \edef\bxjs@paragraph@mark{#1}}
 \newif\ifbxjs@whole@zw@lines \bxjs@whole@zw@linestrue
@@ -605,31 +576,15 @@
 \def\bxjs@kv@labelsection@compat{\let\bxjs@label@section\bxjs@label@section@compat}
 \def\bxjs@kv@labelsection@modern{\let\bxjs@label@section\bxjs@label@section@modern}
 \define@key{bxjs}{label-section}{\bxjs@set@keyval{labelsection}{#1}{}}
-\newif\ifbxjs@usezw \bxjs@usezwtrue
-\bxjs@declare@bool@option{use-zw}{usezw}
-\DeclareOption{nozw}{\setkeys{bxjs}{use-zw=false}}
-\DeclareOption{zw}{\setkeys{bxjs}{use-zw=true}}
-\newif\ifbxjs@disguise@js \bxjs@disguise@jstrue
-\bxjs@declare@bool@option{disguise-js}{disguise@js}
-\DeclareOption{nojs}{\setkeys{bxjs}{disguise-js=false}}
-\DeclareOption{js}{\setkeys{bxjs}{disguise-js=true}}
-\newif\ifbxjs@precisetext
-\bxjs@declare@bool@option{precise-text}{precisetext}
-\DeclareOption{noprecisetext}{\setkeys{bxjs}{precise-text=false}}
-\DeclareOption{precisetext}{\setkeys{bxjs}{precise-text=true}}
-\newif\ifbxjs@simplejasetup \bxjs@simplejasetuptrue
-\bxjs@declare@bool@option{simple-ja-setup}{simplejasetup}
-\DeclareOption{nosimplejasetup}{\setkeys{bxjs}{simple-ja-setup=false}}
-\DeclareOption{simplejasetup}{\setkeys{bxjs}{simple-ja-setup=true}}
-\let\bxjs@org@removeelement\@removeelement
+\let\bxjs@ltx@removeelement\@removeelement
 \def\@removeelement#1#2#3{%
   \def\reserved@a{#2}%
   \ifx\reserved@a\@empty \let#3\@empty
-  \else \bxjs@org@removeelement{#1}{#2}{#3}%
+  \else \bxjs@ltx@removeelement{#1}{#2}{#3}%
   \fi}
 \ExecuteOptions{36pt,a4paper,landscape,oneside,onecolumn,titlepage,final}
 \ProcessOptions\relax
-\bxjs@post@option@hook
+\bxjs@composite@proc
 \if@slide
   \def\maybeblue{\@ifundefined{ver@color.sty}{}{\color{blue}}}
 \fi
@@ -638,28 +593,32 @@
   \setlength\paperheight{\paperwidth}
   \setlength\paperwidth {\@tempdima}
 \fi
-\def\bxjs@tmpdo{%
+\@onlypreamble\bxjs@purge@brace@elts
+\def\bxjs@purge@brace@elts{%
   \def\bxjs@tmpa{\@gobble}%
-  \expandafter\bxjs@tmpdo@a\@classoptionslist,\@nil,%
+  \expandafter\bxjs@purge@be@a\@classoptionslist,\@nil,%
   \let\@classoptionslist\bxjs@tmpa}
-\def\bxjs@tmpdo@a#1,{%
+\@onlypreamble\bxjs@purge@be@a
+\def\bxjs@purge@be@a#1,{%
   \ifx\@nil#1\relax\else
-    \bxjs@tmpdo@b#1{}\@nil
+    \bxjs@purge@be@b#1{}\@nil
     \if@tempswa \edef\bxjs@tmpa{\bxjs@tmpa,#1}\fi
-    \expandafter\bxjs@tmpdo@a
+    \expandafter\bxjs@purge@be@a
   \fi}
-\def\bxjs@tmpdo@b#1#{\bxjs@tmpdo@c}
-\def\bxjs@tmpdo@c#1\@nil{%
+\@onlypreamble\bxjs@purge@be@b
+\def\bxjs@purge@be@b#1#{\bxjs@purge@be@c}
+\@onlypreamble\bxjs@purge@be@c
+\def\bxjs@purge@be@c#1\@nil{%
   \ifx\@nil#1\@nil \@tempswatrue \else \@tempswafalse \fi}
-\bxjs@tmpdo
+\bxjs@purge@brace@elts
 \@expandtwoargs\@removeelement
   {papersize}\@classoptionslist\@classoptionslist
 \@expandtwoargs\@removeelement
   {10pt}\@classoptionslist\@classoptionslist
 \@expandtwoargs\@removeelement
   {noscale}\@classoptionslist\@classoptionslist
-\ifx\bxjs@jadriver@opt\@undefined\else
-  \let\bxjs@jadriver\bxjs@jadriver@opt
+\ifx\bxjs@jadriver\relax\else
+  \let\bxjs@jadriver@given\bxjs@jadriver
 \fi
 \let\bxjs@tmpb\jsEngine
 \ifx j\bxjs@tmpb\ifjsWithpTeXng
@@ -719,17 +678,17 @@
 \else \@tempswatrue
 \fi\fi\fi
 \if@tempswa
-  \ifx\bxjs@driver@opt\@undefined \ifx\bxjs@jadriver@opt\@undefined\else
+  \ifx\bxjs@driver@opt\@undefined \ifx\bxjs@jadriver@given\@undefined\else
     \ClassWarningNoLine\bxjs@clsname
     {No driver option is given}
   \fi\fi
   \ifbxjs@dvi@opt
-    \edef\bxjs@next{%
+    \edef\bxjs@nxt{%
       \let\noexpand\bxjs@driver@given
        \csname bxjs@dvidriver@@\bxjs@driver@opt\endcsname
       \noexpand\g@addto@macro\noexpand\@classoptionslist
        {,\bxjs@driver@opt}%
-    }\bxjs@next
+    }\bxjs@nxt
   \fi
 \fi
 \ifjsWithpTeXng
@@ -750,7 +709,7 @@
     \let\bxjs@jadriver\bxjs@@minimal
   \fi
 \fi
-\ifx\bxjs@jadriver@opt\@undefined\else
+\ifx\bxjs@jadriver@given\@undefined\else
   \ifx\bxjs@engine@given\@undefined
     \ClassError\bxjs@clsname
      {An engine option must be explicitly given}%
@@ -766,23 +725,7 @@
       The default value 'nomag*' is used instead.\MessageBreak \@ehc}
   \fi
 \fi
-\ifx\bxjs@jbase@opt\@undefined\else
-  \ifx\bxjs@base@opt\@undefined
-    \jsSetQHLength\@tempdima{\bxjs@jbase@opt}%
-    \bxjs@invscale\@tempdima\jsScale
-    \bxjs@setbasefontsize{\@tempdima}%
-  \else
-    \ifx\bxjs@scale@opt\@undefined\else
-      \ClassWarningNoLine\bxjs@clsname
-       {Redundant 'scale' option is ignored}%
-    \fi
-    \jsSetQHLength\@tempdima{\bxjs@jbase@opt}%
-    \@tempdimb=\bxjs@param@basefontsize\relax
-    \edef\jsScale{\strip@pt\@tempdimb}%
-    \bxjs@invscale\@tempdima\jsScale
-    \edef\jsScale{\strip@pt\@tempdima}%
-  \fi
-\fi
+\bxjs@do@opt@jbase
 \let\Cjascale\jsScale
 \if \if p\jsEngine T\else\if n\jsEngine T\else F\fi\fi T
   \@tempcnta="80 \loop \ifnum\@tempcnta<"100
@@ -818,7 +761,8 @@
   \divide\@tempdima16384\relax \@tempcnta\@tempdima\relax
   \edef\bxjs@param@mag{\the\@tempcnta}
 \else
-  \bxjs@gset@tempcnta{\bxjs@param@mag}
+  \let\c@bxjs@cnta\@tempcnta
+  \setcounter{bxjs@cnta}{\bxjs@param@mag}
   \ifnum\@tempcnta<\z@ \@tempcnta=\z@ \fi
   \edef\bxjs@param@mag{\the\@tempcnta}
   \advance\@tempcnta100000
@@ -843,7 +787,6 @@
   \catcode`\?=11 \let\p@?\jsc@mpt
 \fi
 \chardef\bxjs@qmcc=\catcode`\?\relax
-\g@addto@macro\bxjs@pre@jadriver@hook{\catcode`\?=12\relax}
 \newdimen\jsZw
 \jsZw=10\jsc@mpt \jsZw=\jsScale\jsZw
 \ifbxjs@usezw
@@ -853,11 +796,7 @@
 \ifjsc@mag@xreal
   \RequirePackage{type1cm}
   \let\jsc@invscale\bxjs@invscale
-  \ifbxjs@TUenc
-    \expandafter\let\csname TU/lmr/m/n/10\endcsname\relax
-  \else
-    \expandafter\let\csname OT1/cmr/m/n/10\endcsname\relax
-  \fi
+  \expandafter\let\csname OT1/cmr/m/n/10\endcsname\relax
   \expandafter\let\csname OMX/cmex/m/n/10\endcsname\relax
   \let\jsc@get@external@font\get@external@font
   \def\get@external@font{%
@@ -893,9 +832,7 @@
     \edef\mandatory@arg{%
       \mandatory@arg\expandafter\genb@x\jsc@cref@size..\@@}%
     \empty@sfcnt}
-  \ifbxjs@TUenc\else
-    \DeclareErrorFont{OT1}{cmr}{m}{n}{10}
-  \fi
+  \DeclareErrorFont{OT1}{cmr}{m}{n}{10}
 \fi
 \def\jsc@smallskip{\vspace\jsc@smallskipamount}
 \newskip\jsc@smallskipamount
@@ -949,10 +886,10 @@
   \skip2=\abovedisplayshortskip
   \skip4=\belowdisplayskip
   \skip6=\belowdisplayshortskip
-  \let\bxjs@save@nomath\@nomath
+  \let\bxjs@ltx@nomath\@nomath
   \let\@nomath\@gobble
   \@currsize\selectfont
-  \let\@nomath\bxjs@save@nomath
+  \let\@nomath\bxjs@ltx@nomath
   \abovedisplayskip=\skip0
   \abovedisplayshortskip=\skip2
   \belowdisplayskip=\skip4
@@ -1028,13 +965,13 @@
 \everydisplay=\expandafter{\the\everydisplay \narrowbaselines}
 \newcommand{\headfont}{\sffamily\bfseries\gtfamily} %% change by Mahito Sugiyama
 \setlength\columnsep{2\Cwd}
-\setlength\columnseprule{\z@}
+\setlength\columnseprule{0\jsc@mpt}
 \setlength\lineskip{1\jsc@mpt}
 \setlength\normallineskip{1\jsc@mpt}
 \setlength\lineskiplimit{1\jsc@mpt}
 \setlength\normallineskiplimit{1\jsc@mpt}
 \renewcommand{\baselinestretch}{}
-\setlength\parskip{\z@}
+\setlength\parskip{0\jsc@mpt}
 \if@slide
   \setlength\parindent{0\p@}
 \else
@@ -1043,54 +980,34 @@
 \@lowpenalty   51
 \@medpenalty  151
 \@highpenalty 301
-\@onlypreamble\bxjs@bd@pre@geometry@hook
-\let\bxjs@bd@pre@geometry@hook\@empty
 \ifjsc@mag
 \mag=\bxjs@param@mag
 \fi
 \setlength{\topskip}{10\p@?}
-\def\bxjs@unit@trueQ{0.25truemm}\let\bxjs@unit@trueH\bxjs@unit@trueQ
-\def\bxjs@unit@zw{\jsZw}\let\bxjs@unit@zh\bxjs@unit@zw
-\def\bxjs@tmpdo{\futurelet\bxjs@tmpa\bxjs@tmpdo@a}
-\def\bxjs@tmpdo@a{%
-  \ifx\bxjs@tmpa\bgroup \expandafter\bxjs@tmpdo@b
-  \else \expandafter\bxjs@tmpdo@c \fi}
-\def\bxjs@tmpdo@b#1#2#3\@nil{\edef\bxjs@param@paper{papersize={#1,#2}}}
-\def\bxjs@tmpdo@c#1\@nil{\bxjs@tmpdo@d#1,,\@nil}
-\def\bxjs@tmpdo@d#1,#2,#3\@nil{%
-  \ifx\@nil#3\@nil\else \edef\bxjs@param@paper{papersize={#1,#2}}\fi}
-\expandafter\bxjs@tmpdo\bxjs@param@paper\@empty\@empty\@nil
+\def\bxjs@read@a{\futurelet\bxjs@tmpa\bxjs@read@b}
+\def\bxjs@read@b{%
+  \ifx\bxjs@tmpa\bgroup \expandafter\bxjs@read@c
+  \else \expandafter\bxjs@read@d \fi}
+\def\bxjs@read@c#1#2#3\@nil{\def\bxjs@param@paper{papersize={#1,#2}}}
+\def\bxjs@read@d#1\@nil{}
+\expandafter\bxjs@read@a\bxjs@param@paper\@nil
 \edef\bxjs@layout@paper{%
   \ifjsc@mag truedimen,\fi
   \if@landscape landscape,\fi
   \bxjs@param@paper}
-\def\bxjs@layout@base{%
+\def\bxjs@layout{%
   noheadfoot,%
-}
-\edef\bxjs@layout{\bxjs@layout@base
   hscale=0.9,hmarginratio=1:1,%
   vscale=0.944,vmarginratio=1:1,%
 }
-\ifx\bxjs@textwidth@opt\@undefined\else
-  \jsSetQHLength\@tempdima{\bxjs@textwidth@opt}
-  \edef\bxjs@layout{\bxjs@layout width=\the\@tempdima,}
-\fi
-\ifx\bxjs@number@of@lines@opt\@undefined\else
-  \bxjs@gset@tempcnta{\bxjs@number@of@lines@opt}
-  \edef\bxjs@layout{\bxjs@layout lines=\the\@tempcnta,}
-\fi
 \newdimen\fullwidth
-\def\bxjs@preproc@layout{%
-  \edef\bxjs@save@ht@strutbox{\the\ht\strutbox}\ht\strutbox=10\jsc@mpt}
 \def\bxjs@postproc@layout{%
   \ifx\bxjs@geometry@driver\relax\else
     \let\Gm@driver\bxjs@geometry@driver
   \fi
-  \ht\strutbox=\bxjs@save@ht@strutbox\relax
   \ifbxjs@whole@zw@lines
     \@tempdimb=\textwidth
     \if@twocolumn \@tempdima=2\Cwd \else \@tempdima=1\Cwd \fi
-    \advance\textwidth.005pt\relax
     \divide\textwidth\@tempdima \multiply\textwidth\@tempdima
     \advance\@tempdimb-\textwidth
     \advance\oddsidemargin 0.5\@tempdimb
@@ -1099,7 +1016,6 @@
   \fullwidth=\textwidth
   \@tempdimb=\textheight
   \advance\textheight-\topskip
-  \advance\textheight.005pt\relax
   \divide\textheight\baselineskip \multiply\textheight\baselineskip
   \advance\textheight\topskip
   \advance\@tempdimb-\textheight
@@ -1121,6 +1037,11 @@
 \edef\jsGeometryOptions{%
   \bxjs@layout@paper,\bxjs@layout}
 \ifx\bxjs@geometry\bxjs@geometry@class
+\@onlypreamble\bxjs@revert
+\let\bxjs@revert\@empty
+\edef\bxjs@tmpa{\the\ht\strutbox}
+\ht\strutbox=10\p@?
+\g@addto@macro\bxjs@revert{\ht\strutbox=\bxjs@tmpa\relax}
 \ifbxjs@papersize
   \ifx\bxjs@driver@given\bxjs@driver@@dvipdfmx
     \PassOptionsToPackage{dvipdfm}{geometry}
@@ -1131,16 +1052,17 @@
 \else
   \PassOptionsToPackage{driver=none}{geometry}
 \fi
-\AtBeginDocument{\bxjs@bd@pre@geometry@hook}
+\edef\bxjs@nxt{%
+  \noexpand\RequirePackage[\bxjs@layout@paper,\bxjs@layout]{geometry}}
+\AtBeginDocument{\bxjs@pre@geometry@hook}
 \AtBeginDocument{\ImposeOldLuaTeXBehavior}
-\bxjs@preproc@layout
-\edef\bxjs@next{%
-  \noexpand\RequirePackage[\bxjs@layout@paper,\bxjs@layout]{geometry}%
-}\bxjs@next
+\bxjs@nxt \bxjs@revert
 \AtBeginDocument{\RevokeOldLuaTeXBehavior}
 \let\bxjs@geometry@driver\Gm@driver
 \bxjs@postproc@layout
-\g@addto@macro\bxjs@bd@pre@geometry@hook{%
+\@onlypreamble\bxjs@pre@geometry@hook
+\def\bxjs@pre@geometry@hook{%
+  \@ifpackageloaded{geometry}{%
     \@ifpackagelater{geometry}{2010/02/12}{}{%else
       \PackageWarningNoLine\bxjs@clsname
        {The 'geometry' package installed\MessageBreak
@@ -1149,42 +1071,37 @@
         \def\bxjs@Gm@driver{pdftex}
         \ifx\pdfhorigin\@undefined \newdimen\pdfhorigin \fi
         \ifx\pdfvorigin\@undefined \newdimen\pdfvorigin \fi
-      \fi\fi}%
+      \fi\fi
+    }%
     \ifjsWithpTeXng
       \ifx\Gm@driver\@empty
         \def\Gm@driver{pdftex}%
       \fi
-    \fi}
-\def\setpagelayout{%
-  \bxjs@ifplus{\bxjs@setpagelayout@a\tw@}{%else
-    \@ifstar{\bxjs@setpagelayout@a\@ne}{\bxjs@setpagelayout@a\z@}}}
-\def\bxjs@setpagelayout@a#1#2{%
-  \ifcase#1% modify
-    \def\bxjs@next{\ifjsc@mag truedimen,\fi #2}%
-  \or% reset(*)
-    \def\bxjs@next{reset,\bxjs@layout@paper,#2}%
-  \or% semireset(+)
-    \def\bxjs@next{reset,\bxjs@layout@paper,\bxjs@layout@base,#2}%
-  \fi
-  \bxjs@preproc@layout
-  \edef\bxjs@next{%
-    \noexpand\geometry{\bxjs@next}%
-  }\bxjs@next
-  \bxjs@postproc@layout}
+    \fi
+  }{}}
+\def\setpagelayout{\@ifstar
+  {\bxjs@reset@layout}{\bxjs@modify@layout}}
+\def\bxjs@modify@layout#1{%
+  \edef\bxjs@nxt{\noexpand\geometry{#1,truedimen}}%
+  \bxjs@nxt\bxjs@postproc@layout}
+\def\bxjs@reset@layout#1{%
+  \edef\bxjs@nxt{\noexpand\geometry{reset,\bxjs@layout@paper,#1,truedimen}}%
+  \bxjs@nxt\bxjs@postproc@layout}
 \else\ifx\bxjs@geometry\bxjs@geometry@user
-\g@addto@macro\bxjs@begin@document@hook{%
+\AtBeginDocument{\bxjs@check@page@layout}
+\@onlypreamble\bxjs@check@page@layout
+\def\bxjs@check@page@layout{%
   \ifdim\textwidth=.5\maxdimen
     \ClassError\bxjs@clsname
      {Page layout is not properly set}%
-     {\@ehd}%
+     {\@ehd}
   \fi}
 \def\jsUseMinimalPageLayout{%
   \setlength{\textwidth}{6.5in}%
   \setlength{\textheight}{8in}}
 \let\bxjs@geometry@driver\relax
-\def\setpagelayout{%
-  \bxjs@ifplus{\bxjs@pagelayout@a}{%else
-    \@ifstar{\bxjs@pagelayout@a}{\bxjs@pagelayout@a}}}
+\def\setpagelayout{\@ifstar
+  {\bxjs@pagelayout@a}{\bxjs@pagelayout@a}}
 \def\bxjs@pagelayout@a#1{%
   \ClassError\bxjs@clsname
    {Command '\string\setpagelayout' is not supported,\MessageBreak
@@ -1913,13 +1830,18 @@
   \bxjs@oldfontcmd@list
   \ifx\@tempa\@empty\else
     \ClassWarningNoLine\bxjs@clsname
+     {Some old font commands were used in text\MessageBreak
+      (see the log file for detail)}%
+    \ClassInfo\bxjs@clsname
      {Some old font commands were used in text:\MessageBreak
       \space\@tempa\MessageBreak
       You should note, that since 1994 LaTeX2e provides a\MessageBreak
       new font selection scheme called NFSS2 with several\MessageBreak
       new, combinable font commands. The
       class provides\MessageBreak
-      the old font commands only for compatibility}
+      the old font commands
+      only for compatibility%
+      \@gobble}%
   \fi}
 \def\bxjs@warnoldfontcmd@kick@final{%
   \g@addto@macro\clearpage{\bxjs@warnoldfontcmd@final}}
@@ -1992,8 +1914,6 @@
           \@dottedtocline{5}{\@tempdima}{6\jsZw}}
 \newdimen\@lnumwidth
 \def\numberline#1{\hb@xt@\@lnumwidth{#1\hfil}\hspace{0pt}}
-\def\jsTocLine{\leaders\hbox{%
-  $\m@th \mkern \@dotsep mu\hbox{.}\mkern \@dotsep mu$}\hfill}
 \def\@dottedtocline#1#2#3#4#5{\ifnum #1>\c@tocdepth \else
   \vskip \z@ \@plus.2\p@?
   {\leftskip #2\relax \rightskip \@tocrmarg \parfillskip -\rightskip
@@ -2003,7 +1923,8 @@
    \@lnumwidth #3\relax
    \advance\leftskip \@lnumwidth \null\nobreak\hskip -\leftskip
     {#4}\nobreak
-    \jsTocLine \nobreak\hb@xt@\@pnumwidth{%
+    \leaders\hbox{$\m@th \mkern \@dotsep mu\hbox{.}\mkern \@dotsep
+       mu$}\hfill \nobreak\hb@xt@\@pnumwidth{%
          \hfil\normalfont \normalcolor #5}\par}\fi}
 \newcommand{\listoffigures}{%
   \section*{\listfigurename}%
@@ -2109,12 +2030,12 @@
     \color@begingroup
       \@makefntext{%
         \rule\z@\footnotesep\ignorespaces}%
-      \futurelet\jsc@next\jsc@fo@t}
-\def\jsc@fo@t{\ifcat\bgroup\noexpand\jsc@next \let\jsc@next\jsc@f@@t
-                                \else \let\jsc@next\jsc@f@t\fi \jsc@next}
-\def\jsc@f@@t{\bgroup\aftergroup\jsc@@foot\let\jsc@next}
-\def\jsc@f@t#1{#1\jsc@@foot}
-\def\jsc@@foot{\@finalstrut\strutbox\color@endgroup\egroup
+      \futurelet\next\fo@t}
+\def\fo@t{\ifcat\bgroup\noexpand\next \let\next\f@@t
+                                \else \let\next\f@t\fi \next}
+\def\f@@t{\bgroup\aftergroup\@foot\let\next}
+\def\f@t#1{#1\@foot}
+\def\@foot{\@finalstrut\strutbox\color@endgroup\egroup
   \ifx\pltx@foot@penalty\@undefined\else
     \ifhmode\null\fi
     \ifnum\pltx@foot@penalty=\z@\else
@@ -2130,7 +2051,7 @@
 \let\jsInhibitGlueAtParTop\@empty
 \def\everyparhook{\jsInhibitGlueAtParTop}
 \ifnum\bxjs@everyparhook=\bxjs@everyparhook@compat
-\g@addto@macro\bxjs@begin@document@hook{\everypar{\everyparhook}}
+\AtBeginDocument{\everypar{\everyparhook}}
 \fi
 \ifx j\jsEngine
 \def\@inhibitglue{%
@@ -2283,7 +2204,6 @@
 \newcommand{\tablename}{\if@english Table~\else 表\fi}
 \newcommand{\appendixname}{\if@english \else 付録\fi}
 \newcommand{\abstractname}{\if@english Abstract\else 概要\fi}
-\@onlypreamble\bxjs@decl@Seireki@cmds
 \@tempswafalse
 \if p\jsEngine \@tempswatrue \fi
 \if n\jsEngine \@tempswatrue \fi
@@ -2319,36 +2239,25 @@
   \def\bxjs@iai{\noexpand~}
 \else \def\bxjs@iai{}
 \fi
-\newif\ifbxjs@bxwareki@avail
-\IfFileExists{bxwareki.sty}{%
-  \RequirePackage{bxwareki}[]%
-  \bxjs@bxwareki@availtrue}{}
-\ifbxjs@bxwareki@avail
-  \let\jayear\warekiyear
-  \def\bxjs@tmpa{H}\ifx\bxjs@tmpa\warekigengoinitial
-    \newcount\heisei \heisei=\value{warekiyear}
-  \fi
+\newcount\bxjs@jayear
+\let\bxjs@gengo\@empty \bxjs@jayear\year
+\@tempcnta=\the\year\two@digits\month\two@digits\day\relax
+\ifnum\@tempcnta<19700101
+\else\ifnum\@tempcnta<19890108
+  \def\bxjs@gengo{昭和}\advance\bxjs@jayear-1925\relax
+  \let\heisei\bxjs@jayear
+\else\ifnum\@tempcnta<20190501
+  \def\bxjs@gengo{平成}\advance\bxjs@jayear-1988\relax
+  \let\heisei\bxjs@jayear
 \else
-  \@tempcnta=\the\year\two@digits\month\two@digits\day\relax
-  \ifnum\@tempcnta<19890108 \else \ifnum\@tempcnta<20190501
-    \newcount\heisei \heisei\year \advance\heisei-1988\relax
-  \fi\fi
-  \ifnum \ifx\heisei\@undefined\z@\else\heisei\fi >\@ne
-    \edef\jayear{\bxjs@unxp{平成}\bxjs@iai \the\heisei \bxjs@iai}
-  \else \edef\jayear{\the\year \bxjs@iai}
-  \fi
-\fi
-\let\bxjs@next\relax
-\ifbxjs@bxwareki@avail
-  \ifx\warekigengo\@empty\else
-    \def\bxjs@next{\bxjs@onxp{\warekitoday}}
-  \fi
-\else\ifnum \ifx\heisei\@undefined\z@\else\heisei\fi >\@ne
-  \def\bxjs@next{%
-    \bxjs@unxp{平成}\bxjs@iai\number\heisei\bxjs@iai\bxjs@unxp{年}%
-    \bxjs@iai\number\month\bxjs@iai\bxjs@unxp{月}%
-    \bxjs@iai\number\day\bxjs@iai\bxjs@unxp{日}}
-\fi\fi
+\fi\fi\fi
+\edef\jayear{%
+  \ifx\bxjs@gengo\@empty \the\bxjs@jayear\bxjs@iai
+  \else \bxjs@onxp{\bxjs@gengo}%
+    \ifnum\bxjs@jayear=\@ne \bxjs@unxp{元}%
+    \else \bxjs@iai\the\bxjs@jayear\bxjs@iai
+    \fi
+  \fi}
 \edef\bxjs@today{%
   \if@english
     \ifcase\month\or
@@ -2356,16 +2265,18 @@
       July\or August\or September\or October\or November\or December\fi
       \space\number\day, \number\year
   \else
-    \ifx\bxjs@next\relax \expandafter\@firstoftwo
-    \else \noexpand\bxjs@if@use@seireki
-    \fi {%
+    \noexpand\bxjs@if@use@seireki{%
       \number\year\bxjs@iai\bxjs@unxp{年}%
       \bxjs@iai\number\month\bxjs@iai\bxjs@unxp{月}%
       \bxjs@iai\number\day\bxjs@iai\bxjs@unxp{日}%
-    }{\bxjs@next}%
+    }{%
+      \bxjs@onxp{\jayear}\bxjs@unxp{年}%
+      \bxjs@iai\number\month\bxjs@iai\bxjs@unxp{月}%
+      \bxjs@iai\number\day\bxjs@iai\bxjs@unxp{日}%
+    }%
   \fi}
 \let\today\bxjs@today
-\g@addto@macro\bxjs@begin@document@hook{%
+\AtBeginDocument{%
   \ifx\bbl@jpn@Seirekitrue\@undefined\else
     \bxjs@decl@Seireki@cmds
     \g@addto@macro\datejapanese{%
@@ -2384,8 +2295,11 @@
 \fi
   \renewcommand\familydefault{\sfdefault}
   \raggedright
-\bxjs@pre@jadriver@hook
+\catcode`\?=12
+\ifx\bxjs@jadriver\relax\else
 \input{bxjsja-\bxjs@jadriver.def}
+\fi
+\bxjs@restore@jltrcc
 
 %%% ===== change by Mahito Sugiyama from here =====
 % top space
